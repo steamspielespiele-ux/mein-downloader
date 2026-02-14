@@ -1,0 +1,22 @@
+name: Drive Downloader
+on: workflow_dispatch
+
+jobs:
+  download_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Rclone
+        run: sudo apt-get install rclone -y
+
+      - name: Setup Config
+        run: |
+          mkdir -p ~/.config/rclone
+          echo "${{ secrets.RCLONE_CONFIG_CONTENT }}" > ~/.config/rclone/rclone.conf
+
+      - name: Download to Drive
+        run: |
+          # Hier laden wir als Test 7-Zip herunter
+          curl -L "https://www.7-zip.org/a/7z2401-extra.7z" -o test.7z
+          
+          # Kopieren in dein Drive (Ordner: CloudDownloads)
+          rclone copy test.7z mydrive:CloudDownloads
